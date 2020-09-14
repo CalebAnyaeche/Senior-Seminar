@@ -4,12 +4,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import argparse
 import warnings
-import datetime
-import dropbox
-import imutils
 import json
-import time
-import cv2
 
 # construct the argument parser
 ap = argparse.ArgumentParser()
@@ -20,5 +15,4 @@ args = vars(ap.parse_args())
 # filter warnings and load the configuration
 warnings.filterwarnings("ignore")
 conf = json.load(open(args["conf"]))
-client = None
 
