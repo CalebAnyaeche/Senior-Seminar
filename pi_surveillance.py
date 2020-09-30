@@ -31,3 +31,11 @@ time.sleep(conf["camera_warmup_time"])
 avg = None
 lastUploaded = datetime.datetime.now()
 motionCounter = 0
+
+# capture frames from the camera
+for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        # grab the raw NumPy array representing the image and initialize
+        # the timestamp and occupied/unoccupied text
+        frame = f.array
+        timestamp = datetime.datetime.now()
+        text = "Unoccupied"
