@@ -53,3 +53,9 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 avg = gray.copy().astype("float")
                 rawCapture.truncate(0)
                 continue
+        
+        # accumulate the weighted average between the current frame and
+        # previous frames, then compute the difference between the current
+        # frame and running average
+        cv2.accumulateWeighted(gray, avg, 0.5)
+        frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
