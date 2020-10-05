@@ -46,3 +46,10 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         frame = imutils.resize(frame, width=500)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (21, 21), 0)
+
+        # if the average frame is None, initialize it
+        if avg is None:
+                print("[INFO] starting background model...")
+                avg = gray.copy().astype("float")
+                rawCapture.truncate(0)
+                continue
