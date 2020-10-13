@@ -59,3 +59,14 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         # frame and running average
         cv2.accumulateWeighted(gray, avg, 0.5)
         frameDelta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
+
+        # threshold the delta image, dilate the thresholded image to fill
+        # in holes, then find contours on thresholded image
+        thresh = cv2.threshold(frameDelta, conf["delta_thresh"], 255,
+                cv2.THRESH_BINARY)[1]
+        thresh = cv2.dilate(thresh, None, iterations=2)
+        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+                cv2.CHAIN_APPROX_SIMPLE)
+        cnts = cnts[0] if imutils.is_cv2() else cnts[1]
+ 
+
