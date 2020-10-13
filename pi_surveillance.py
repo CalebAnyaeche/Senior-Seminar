@@ -68,5 +68,17 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
                 cv2.CHAIN_APPROX_SIMPLE)
         cnts = cnts[0] if imutils.is_cv2() else cnts[1]
+
+        # loop over the contours
+        for c in cnts:
+                # if the contour is too small, ignore it
+                if cv2.contourArea(c) < conf["min_area"]:
+                        continue
+ 
+                # compute the bounding box for the contour, draw it on the frame,
+                # and update the text
+                (x, y, w, h) = cv2.boundingRect(c)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                text = "Occupied"
  
 
