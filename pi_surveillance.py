@@ -93,7 +93,18 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 # check to see if enough time has  between uploads
                 if (timestamp - lastUploaded).seconds >= conf["min_upload_seconds"]:
                         # increment the motion counter
-                        motionCounter += 1   
+                        motionCounter += 1
+
+                        # check to see if the number of frames with consistent motion is
+                        # high enough
+                        if motionCounter >= conf["min_motion_frames"]:
+                                # check to see if dropbox sohuld be used
+                                if conf["use_dropbox"]:
+                                        # write the image to temporary file
+                                        t = TempImage()
+                                        cv2.imwrite(t.path, frame)
+ 
+
 
  
 
