@@ -5,6 +5,7 @@ from picamera import PiCamera
 import argparse
 import warnings
 import datetime
+import dropbox
 import imutils
 import json
 import time
@@ -19,6 +20,13 @@ args = vars(ap.parse_args())
 # filter warnings and load the configuration
 warnings.filterwarnings("ignore")
 conf = json.load(open(args["conf"]))
+client = None
+
+# check to see if the Dropbox should be used
+if conf["use_dropbox"]:
+        # connect to dropbox and start the session authorization process
+        client = dropbox.Dropbox(conf["dropbox_access_token"])
+        print("[SUCCESS] dropbox account linked")
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
