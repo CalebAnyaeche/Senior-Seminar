@@ -1,11 +1,12 @@
 # import packages 
-from pyimagesearch.tempimage import TempImage
+#from pyimagesearch.tempimage import TempImage
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+import pyrebase 
 import argparse
 import warnings
 import datetime
-import dropbox
+#import dropbox
 import imutils
 import json
 import time
@@ -28,6 +29,20 @@ if conf["use_dropbox"]:
         client = dropbox.Dropbox(conf["dropbox_access_token"])
         print("[SUCCESS] dropbox account linked")
 
+# initialize the real time database
+config = {
+    "apiKey": "AIzaSyC-ZcUe-TdCuHij2n0S4DXibz6XWVsgxrA",
+    "authDomain": "tractor-c5bfe.firebaseapp.com",
+    "databaseURL": "https://tractor-c5bfe-default-rtdb.firebaseio.com",
+    "projectId": "tractor-c5bfe",
+    "storageBucket": "tractor-c5bfe.appspot.com",
+    "messagingSenderId": "754238013820",
+    "appId": "1:754238013820:web:5a0384ffcae695b8d1a4f9",
+    "measurementId": "G-LKYJT1N737"  
+}
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
+
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = tuple(conf["resolution"])
@@ -41,6 +56,7 @@ time.sleep(conf["camera_warmup_time"])
 avg = None
 lastUploaded = datetime.datetime.now()
 motionCounter = 0
+pastTextStatus = "Unoccupied"
 
 # capture frames from the camera
 for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
@@ -123,6 +139,9 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                                 # counter
                                 lastUploaded = timestamp
                                 motionCounter = 0
+                if pastTextStatus != "Occupied":
+                        db.child("consumers").push({"consumer": "1"})
+
         # otherwise, the room is not occupied
         else:
                 motionCounter = 0
@@ -139,6 +158,11 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
  
         # clear the stream in preparation for the next frame
         rawCapture.truncate(0)
+
+        # keep track of previous room status
+        pastTextStatus = text
+
+        
                                 
  
 
