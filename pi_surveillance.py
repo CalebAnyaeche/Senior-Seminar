@@ -1,11 +1,11 @@
 # import packages 
-from pyimagesearch.tempimage import TempImage
+#from pyimagesearch.tempimage import TempImage
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import argparse
 import warnings
 import datetime
-import dropbox
+#import dropbox
 import imutils
 import json
 import time
