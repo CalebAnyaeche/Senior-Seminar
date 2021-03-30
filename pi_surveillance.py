@@ -140,7 +140,10 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                                 lastUploaded = timestamp
                                 motionCounter = 0
                 if pastTextStatus != "Occupied":
-                        db.child("consumers").push({"consumer": "1"})
+                        # Update the number of detected consumers
+                        consumerSizeOBJ =  db.child("consumers").child("size").get()
+                        newSize = consumerSizeOBJ.val().get("count", 0) + 1
+                        db.child("consumers").child("size").update({"count": newSize})
 
         # otherwise, the room is not occupied
         else:
