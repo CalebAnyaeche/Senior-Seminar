@@ -20,8 +20,8 @@ app = Flask(__name__)
 @app.route("/", methods=["GET", "POST"])
 def basic():
     consumerSizeOBJ =  db.child("consumers").child("size").get()
-    currentSize = consumerSizeOBJ.val().get("count", 0)
-    return str(currentSize)
+    currentSize = str(consumerSizeOBJ.val().get("count", 0))
+    return render_template('display.html', count=currentSize)
 
 if __name__ == "__main__":
     app.run(debug=True)
